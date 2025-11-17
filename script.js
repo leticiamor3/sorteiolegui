@@ -1,166 +1,211 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const btnNovaSala = document.getElementById("btnNovaSala");
-    const codigoSalaInput = document.getElementById("codigoSala");
+:root {
+    --rosa-fundo: #ffe6f2;
+    --rosa-card: #ffd1ec;
+    --rosa-botao: #ff8ac2;
+    --rosa-botao-hover: #ff6daf;
+    --rosa-borda: #ffbfdc;
+    --texto-escuro: #42273b;
+    --erro: #ff3b6b;
+    --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --radius-card: 18px;
+    --transition-base: 0.2s ease-out;
+}
 
-    const temaSelect = document.getElementById("temaSelect");
-    const temaPersonalizadoWrapper = document.getElementById("temaPersonalizadoWrapper");
-    const temaPersonalizadoInput = document.getElementById("temaPersonalizado");
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    const nick1Input = document.getElementById("nick1");
-    const nick2Input = document.getElementById("nick2");
+body {
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #ffe6f2, #ffeaf8);
+    color: var(--texto-escuro);
+    min-height: 100vh;
+}
 
-    const ideia1_1 = document.getElementById("ideia1_1");
-    const ideia1_2 = document.getElementById("ideia1_2");
-    const ideia1_3 = document.getElementById("ideia1_3");
+.page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+}
 
-    const ideia2_1 = document.getElementById("ideia2_1");
-    const ideia2_2 = document.getElementById("ideia2_2");
-    const ideia2_3 = document.getElementById("ideia2_3");
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+}
 
-    const btnSortear = document.getElementById("btnSortear");
-    const erroMsg = document.getElementById("erroMsg");
+.header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+}
 
-    const resultadoCard = document.getElementById("resultadoCard");
-    const resultadoNome = document.getElementById("resultadoNome");
-    const resultadoTema = document.getElementById("resultadoTema");
-    const resultadoIdeia = document.getElementById("resultadoIdeia");
-    const resultadoFrase = document.getElementById("resultadoFrase");
+.header p {
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
 
-    // Botão de criar código de sala (apenas decorativo/organizador)
-    btnNovaSala.addEventListener("click", () => {
-        const codigo = gerarCodigoSala();
-        codigoSalaInput.value = codigo;
-        codigoSalaInput.focus();
-        codigoSalaInput.select();
-    });
+.card {
+    background: #fff;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 18px 18px 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--rosa-borda);
+}
 
-    // Mostrar / esconder campo de tema personalizado
-    temaSelect.addEventListener("change", () => {
-        if (temaSelect.value === "outro") {
-            temaPersonalizadoWrapper.classList.remove("hidden");
-        } else {
-            temaPersonalizadoWrapper.classList.add("hidden");
-            temaPersonalizadoInput.value = "";
-        }
-    });
+.card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
 
-    // Clique no botão de sortear
-    btnSortear.addEventListener("click", () => {
-        limparErro();
+.card h3 {
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
 
-        const nick1 = (nick1Input.value || "Pessoa 1").trim();
-        const nick2 = (nick2Input.value || "Pessoa 2").trim();
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 10px;
+}
 
-        // Coletar ideias de cada pessoa
-        const ideiasPessoa1 = coletarIdeiasDePessoa(nick1, [
-            ideia1_1, ideia1_2, ideia1_3
-        ], 1);
+label {
+    font-size: 0.9rem;
+}
 
-        const ideiasPessoa2 = coletarIdeiasDePessoa(nick2, [
-            ideia2_1, ideia2_2, ideia2_3
-        ], 2);
+input,
+select,
+textarea {
+    border-radius: 10px;
+    border: 1px solid #f0b7d0;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+    background: #fff9fd;
+}
 
-        const todasIdeias = [...ideiasPessoa1, ...ideiasPessoa2];
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--rosa-botao);
+    box-shadow: 0 0 0 2px rgba(255, 138, 194, 0.25);
+    transform: translateY(-1px);
+}
 
-        if (todasIdeias.length === 0) {
-            mostrarErro("Digite pelo menos uma ideia para sortear.");
-            return;
-        }
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
 
-        // Definir tema
-        let tema = temaSelect.value;
-        if (tema === "outro") {
-            tema = temaPersonalizadoInput.value.trim() || "Tema personalizado";
-        } else if (!tema) {
-            tema = "Sem tema específico";
-        }
+.room-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
 
-        const vencedor = sortearVencedor(ideiasPessoa1, ideiasPessoa2, todasIdeias);
-        mostrarResultado(vencedor, tema);
-    });
+.room-row input {
+    flex: 1;
+    min-width: 150px;
+}
 
-    function gerarCodigoSala() {
-        const chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-        let codigo = "";
-        for (let i = 0; i < 6; i++) {
-            const idx = Math.floor(Math.random() * chars.length);
-            codigo += chars[idx];
-        }
-        return codigo;
+button {
+    border: none;
+    border-radius: 999px;
+    background: var(--rosa-botao);
+    color: #fff;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+    box-shadow: 0 5px 12px rgba(255, 138, 194, 0.3);
+    white-space: nowrap;
+}
+
+button:hover {
+    background: var(--rosa-botao-hover);
+    box-shadow: 0 8px 18px rgba(255, 138, 194, 0.4);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(255, 138, 194, 0.3);
+}
+
+.actions {
+    text-align: center;
+}
+
+.actions button {
+    padding: 10px 28px;
+    font-size: 1rem;
+}
+
+.hint {
+    font-size: 0.8rem;
+    margin-top: 6px;
+    opacity: 0.8;
+}
+
+.hint.small {
+    margin-top: 10px;
+}
+
+code {
+    background: #ffe6f4;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.col {
+    padding-top: 4px;
+}
+
+@media (min-width: 720px) {
+    .two-columns {
+        grid-template-columns: 1fr 1fr;
     }
+}
 
-    function coletarIdeiasDePessoa(nick, campos, pessoaIndex) {
-        const prefixoMagico = "ideia da lele";
-        const lista = [];
+.resultado {
+    border-left: 6px solid var(--rosa-botao);
+}
 
-        campos.forEach((campo) => {
-            const texto = (campo.value || "").trim();
-            if (!texto) return;
+.resultado h2 {
+    margin-bottom: 4px;
+}
 
-            const textoLower = texto.toLowerCase();
-            const cheat = textoLower.startsWith(prefixoMagico);
+.frase {
+    margin-top: 8px;
+    font-weight: 600;
+}
 
-            lista.push({
-                nick,
-                texto,
-                pessoa: pessoaIndex,
-                cheat
-            });
-        });
+.footer {
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    opacity: 0.8;
+}
 
-        return lista;
-    }
+.hidden {
+    display: none;
+}
 
-    function sortearVencedor(ideiasPessoa1, ideiasPessoa2, todasIdeias) {
-        const temIdeias1 = ideiasPessoa1.length > 0;
-        const temIdeias2 = ideiasPessoa2.length > 0;
-
-        // Se só uma pessoa tem ideias, ela ganha automaticamente
-        if (temIdeias1 && !temIdeias2) {
-            return escolherAleatoria(ideiasPessoa1);
-        }
-        if (!temIdeias1 && temIdeias2) {
-            return escolherAleatoria(ideiasPessoa2);
-        }
-
-        // Ambas têm ideias: aplicar regra do prefixo mágico
-        const cheatIdeias1 = ideiasPessoa1.filter(i => i.cheat);
-        const cheatIdeias2 = ideiasPessoa2.filter(i => i.cheat);
-
-        if (cheatIdeias1.length > 0 && cheatIdeias2.length === 0) {
-            return escolherAleatoria(cheatIdeias1);
-        }
-
-        if (cheatIdeias1.length === 0 && cheatIdeias2.length > 0) {
-            return escolherAleatoria(cheatIdeias2);
-        }
-
-        // Ou as duas usaram ou nenhuma usou: sorteio imparcial entre todas as ideias
-        return escolherAleatoria(todasIdeias);
-    }
-
-    function escolherAleatoria(lista) {
-        const idx = Math.floor(Math.random() * lista.length);
-        return lista[idx];
-    }
-
-    function mostrarResultado(vencedor, tema) {
-        resultadoNome.textContent = vencedor.nick;
-        resultadoTema.textContent = tema;
-        resultadoIdeia.textContent = vencedor.texto;
-        resultadoFrase.textContent = "Vencedor escolhido aleatoriamente 🎲";
-
-        resultadoCard.classList.remove("hidden");
-        resultadoCard.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-
-    function mostrarErro(msg) {
-        erroMsg.textContent = msg;
-        erroMsg.classList.remove("hidden");
-    }
-
-    function limparErro() {
-        erroMsg.textContent = "";
-        erroMsg.classList.add("hidden");
-    }
-});
+.erro {
+    color: var(--erro);
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
