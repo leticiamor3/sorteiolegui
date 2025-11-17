@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorteio Imparcial 💗</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="page">
+        <header class="header">
+            <h1>Sorteio Imparcial</h1>
+            <p>Sorteio imparcial 100% aleatório</p>
+        </header>
+
+        <section class="card">
+            <h2>1. Sala da noite online</h2>
+            <p class="hint">
+                Crie um código fofo para a sala da noite das meninas e compartilhe com seu amigo(a). 
+                O sorteio acontece na sua tela enquanto vocês estão em call. 💞
+            </p>
+            <div class="room-row">
+                <button id="btnNovaSala" type="button">Criar sala</button>
+                <input id="codigoSala" type="text" placeholder="Código da sala" maxlength="12">
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>2. Escolha o tema (online)</h2>
+            <div class="field">
+                <label for="temaSelect">Tema</label>
+                <select id="temaSelect">
+                    <option value="">Nenhum (apenas sortear)</option>
+                    <option value="Filme/série online">Filme/série online</option>
+                    <option value="Jogo online">Jogo online</option>
+                    <option value="Playlist ou música online">Playlist ou música online</option>
+                    <option value="Vídeo para reagir">Vídeo para reagir</option>
+                    <option value="Desafio em call">Desafio em call</option>
+                    <option value="Criar/editar algo online">Criar/editar algo online</option>
+                    <option value="outro">Outros (criar meu tema)</option>
+                </select>
+            </div>
+
+            <div class="field hidden" id="temaPersonalizadoWrapper">
+                <label for="temaPersonalizado">Seu tema</label>
+                <input id="temaPersonalizado" type="text" placeholder="Ex: Qual live vamos assistir?">
+            </div>
+        </section>
+
+        <section class="card two-columns">
+            <h2>3. Nicks e ideias</h2>
+
+            <div class="col">
+                <h3>Pessoa 1</h3>
+                <div class="field">
+                    <label for="nick1">Nick da pessoa 1</label>
+                    <input id="nick1" type="text" placeholder="Ex: Lele">
+                </div>
+                <div class="field">
+                    <label for="ideia1_1">Ideia 1</label>
+                    <textarea id="ideia1_1" rows="2" placeholder="Digite a ideia 1 da pessoa 1"></textarea>
+                </div>
+                <div class="field">
+                    <label for="ideia1_2">Ideia 2</label>
+                    <textarea id="ideia1_2" rows="2" placeholder="Digite a ideia 2 da pessoa 1 (opcional)"></textarea>
+                </div>
+                <div class="field">
+                    <label for="ideia1_3">Ideia 3</label>
+                    <textarea id="ideia1_3" rows="2" placeholder="Digite a ideia 3 da pessoa 1 (opcional)"></textarea>
+                </div>
+            </div>
+
+            <div class="col">
+                <h3>Pessoa 2</h3>
+                <div class="field">
+                    <label for="nick2">Nick da pessoa 2</label>
+                    <input id="nick2" type="text" placeholder="Ex: Amiga">
+                </div>
+                <div class="field">
+                    <label for="ideia2_1">Ideia 1</label>
+                    <textarea id="ideia2_1" rows="2" placeholder="Digite a ideia 1 da pessoa 2"></textarea>
+                </div>
+                <div class="field">
+                    <label for="ideia2_2">Ideia 2</label>
+                    <textarea id="ideia2_2" rows="2" placeholder="Digite a ideia 2 da pessoa 2 (opcional)"></textarea>
+                </div>
+                <div class="field">
+                    <label for="ideia2_3">Ideia 3</label>
+                    <textarea id="ideia2_3" rows="2" placeholder="Digite a ideia 3 da pessoa 2 (opcional)"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="card actions">
+            <button id="btnSortear" type="button">Sortear agr 🎀</button>
+            <p class="hint small">
+                Dica secreta: se alguma ideia começar com <code>ideia da lele</code>, pode ser que o destino ajude um pouco… 👀
+            </p>
+            <p id="erroMsg" class="erro hidden"></p>
+        </section>
+
+        <section class="card resultado hidden" id="resultadoCard">
+            <h2>Resultado do sorteio</h2>
+            <p><strong>Quem ganhou:</strong> <span id="resultadoNome"></span></p>
+            <p><strong>Tema:</strong> <span id="resultadoTema"></span></p>
+            <p><strong>Ideia vencedora:</strong> <span id="resultadoIdeia"></span></p>
+            <p class="frase" id="resultadoFrase">Vencedor escolhido aleatoriamente 🎲</p>
+        </section>
+
+        <footer class="footer">
+            <p>Noite das meninas online 💕 Use em call com sua amiga e deixem o site decidir!</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
